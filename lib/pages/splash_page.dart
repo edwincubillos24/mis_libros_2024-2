@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mis_libros/pages/login_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'home_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -11,8 +14,18 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   Future<void> _closeSplash() async {
     Future.delayed(const Duration(seconds: 2), () async {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const LoginPage()));
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var isUserLogged = prefs.getBool("isUserLogged");
+
+      if (isUserLogged?? false) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomePage()));
+      } else {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()));
+      }
     });
   }
 

@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mis_libros/pages/register_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/user.dart';
+import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,6 +17,47 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _email = TextEditingController();
   final _password = TextEditingController();
+
+  User user = User.Empty();
+
+  void _showMsg(String msg){
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        duration: Duration(days: 365),
+        action: SnackBarAction(
+            label: "Aceptar", onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
+  }
+
+  void _saveSession() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("isUserLogged", true);
+  }
+
+  void _login(){
+    if (_email.text == user.email && _password.text == user.password){
+      _saveSession();
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const HomePage()));
+    } else {
+      _showMsg("Correo electrónico o contraseña incorrecta");
+    }
+  }
+
+  void _loadUser() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> userMap = jsonDecode(prefs.getString("user")!);
+    user = User.fromJson(userMap);
+  }
+
+  @override
+  void initState() {
+    _loadUser();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +93,9 @@ class _LoginPageState extends State<LoginPage> {
                 height: 16,
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  _login();
+                },
                 child: const Text("Iniciar sesión"),
               ),
               const SizedBox(

@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/user.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -24,6 +30,80 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _isRepPasswordObscure = true;
 
   Genre? _genre = Genre.male;
+
+  late String? _city;
+
+  final List<String> _cities = [
+    'Barranquilla',
+    'Bogotá',
+    'Cali',
+    'Medellin',
+    'Pereira'
+  ];
+
+  String buttonMsg = "Fecha de nacimiento";
+
+  DateTime _date = DateTime.now();
+
+  String _dateConverter(DateTime date){
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String dateFormatted = formatter.format(date);
+    return dateFormatted;
+  }
+
+  void _showSelectDate() async {
+    final DateTime? newDate = await showDatePicker(
+      locale: const Locale("es"),
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1924,1),
+      lastDate: DateTime.now(),
+      helpText: "Fecha de nacimiento",
+    );
+    if (newDate != null) {
+      setState(() {
+        _date = newDate;
+        buttonMsg = "Fecha de nacimiento: ${_dateConverter(newDate)}";
+      });
+    }
+  }
+
+  void _showMsg(String msg){
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+        SnackBar(
+          content: Text(msg),
+          duration: Duration(days: 365),
+          action: SnackBarAction(
+            label: "Aceptar", onPressed: scaffold.hideCurrentSnackBar),
+          ),
+        );
+  }
+
+  void _saveUser(User user) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("user", jsonEncode(user));
+    Navigator.pop(context);
+  }
+  void _onRegisterButtonClicked(){
+    String genre = "Masculino";
+    if (_email.text.isEmpty || _password.text.isEmpty){
+      _showMsg("ERROR: Debe digitar el correo y la contraseña");
+    } else {
+      if (_password.text != _repPassword.text) {
+        _showMsg("ERROR: Las contraseñas deben de ser iguales");
+      } else {
+        if (_genre == Genre.female){
+          genre = "Femenino";
+        }
+        var user = User(
+          _name.text, _email.text, _password.text, _city, genre,
+          _isActionFavorite, _isAdventureFavorite, _isFictionFavorite, _isSuspenseFavorite,
+          _date.toString());
+        _saveUser(user);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +142,16 @@ class _RegisterPageState extends State<RegisterPage> {
                       prefixIcon: Icon(Icons.email),
                       helperText: "*Campo obligatorio"),
                   keyboardType: TextInputType.emailAddress,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (value) =>
-                      value!.isValidEmail() ? null : "Correo inválido",
+                  autovalidateMode: AutovalidateMode.always,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Debe digitar un correo";
+                    } else {
+                      if (!value!.isValidEmail() ){
+                        return "Correo inválido";
+                      }
+                    }
+                  }
                 ),
                 const SizedBox(
                   height: 16,
@@ -111,6 +198,23 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   keyboardType: TextInputType.visiblePassword,
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                DropdownMenu<String>(
+                  width: 380,
+                  enableFilter: true,
+                  requestFocusOnTap: true,
+                  label: const Text("Ciudad de residencia"),
+                  onSelected: (String? city){
+                    setState(() {
+                      _city = city;
+                    });
+                  },
+                  dropdownMenuEntries: _cities.map<DropdownMenuEntry<String>>((String city){
+                    return DropdownMenuEntry<String>(value: city, label: city);
+                  }).toList(),
                 ),
                 const SizedBox(
                   height: 16,
@@ -208,10 +312,18 @@ class _RegisterPageState extends State<RegisterPage> {
                   ],
                 ),
                 ElevatedButton(
+                  onPressed: (){
+                    _showSelectDate();
+                  },
+                  child: Text(buttonMsg)
+                ),
+                ElevatedButton(
                     style: TextButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 14),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      _onRegisterButtonClicked();
+                    },
                     child: const Text("Registrar"))
               ],
             ),
@@ -220,6 +332,8 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+
+
 }
 
 extension on String {
