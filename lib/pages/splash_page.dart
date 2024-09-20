@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:mis_libros/pages/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'drawer_page.dart';
 import 'home_page.dart';
+import 'navigation_bar_page.dart';
+import 'tabs_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -20,7 +23,7 @@ class _SplashPageState extends State<SplashPage> {
       if (isUserLogged?? false) {
         Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const HomePage()));
+            MaterialPageRoute(builder: (context) => const DrawerPage()));
       } else {
         Navigator.pushReplacement(
             context,

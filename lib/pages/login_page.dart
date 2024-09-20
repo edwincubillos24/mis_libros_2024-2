@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user.dart';
 import 'home_page.dart';
+import 'navigation_bar_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -41,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_email.text == user.email && _password.text == user.password){
       _saveSession();
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const HomePage()));
+          context, MaterialPageRoute(builder: (context) => const NavigationBarPage()));
     } else {
       _showMsg("Correo electrónico o contraseña incorrecta");
     }
