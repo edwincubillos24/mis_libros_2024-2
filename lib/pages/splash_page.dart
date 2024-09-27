@@ -1,11 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mis_libros/pages/login_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'drawer_page.dart';
-import 'home_page.dart';
 import 'navigation_bar_page.dart';
-import 'tabs_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -17,18 +14,20 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   Future<void> _closeSplash() async {
     Future.delayed(const Duration(seconds: 2), () async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var isUserLogged = prefs.getBool("isUserLogged");
+      /*SharedPreferences prefs = await SharedPreferences.getInstance();
+      var isUserLogged = prefs.getBool("isUserLogged");*/
 
-      if (isUserLogged?? false) {
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const DrawerPage()));
-      } else {
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginPage()));
-      }
+      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+        if (user != null) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const NavigationBarPage()));
+        } else {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const LoginPage()));
+        }
+      });
     });
   }
 

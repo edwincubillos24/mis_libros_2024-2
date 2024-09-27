@@ -1,11 +1,8 @@
-import 'dart:convert';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mis_libros/pages/register_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mis_libros/repository/firebase_api.dart';
 
-import '../models/user.dart';
-import 'home_page.dart';
 import 'navigation_bar_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -16,12 +13,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final FirebaseApi _firebaseApi = FirebaseApi();
+
   final _email = TextEditingController();
   final _password = TextEditingController();
 
-  User user = User.Empty();
+  //User user = User.Empty();
 
-  void _showMsg(String msg){
+  void _showMsg(String msg) {
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
       SnackBar(
@@ -33,32 +32,31 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _saveSession() async{
+  /*void _saveSession() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool("isUserLogged", true);
-  }
+  }*/
 
-  void _login(){
-    if (_email.text == user.email && _password.text == user.password){
-      _saveSession();
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const NavigationBarPage()));
+  void _signIn() async {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: _email.text);
+    var result = await _firebaseApi.signInUser(_email.text, _password.text);
+    if (result == 'invalid-credential') {
+      _showMsg('Correo electrónico o contraseña incorrecta');
+    } else if (result == 'invalid-email') {
+      _showMsg('El correo electrónico está mal escrito');
+    } else if (result == 'network-request-failed') {
+      _showMsg('Revise su conexión a internet');
     } else {
-      _showMsg("Correo electrónico o contraseña incorrecta");
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const NavigationBarPage()));
     }
   }
 
-  void _loadUser() async{
+  /*void _loadUser() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     Map<String, dynamic> userMap = jsonDecode(prefs.getString("user")!);
     user = User.fromJson(userMap);
-  }
-
-  @override
-  void initState() {
-    _loadUser();
-    super.initState();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  _login();
+                  _signIn();
                 },
                 child: const Text("Iniciar sesión"),
               ),

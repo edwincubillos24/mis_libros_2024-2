@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class FirebaseApi{
+import '../models/user.dart' as UserApp;
 
-  Future<String?> registerUser(String email, String password) async {
+class FirebaseApi {
+  Future<String?> createUser(String email, String password) async {
     try {
-      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -18,7 +21,7 @@ class FirebaseApi{
     }
   }
 
-  Future<String?> logInUser(String email, String password) async {
+  Future<String?> signInUser(String email, String password) async {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
@@ -34,4 +37,15 @@ class FirebaseApi{
     }
   }
 
+  Future<String> addUserInDB(UserApp.User user) async {
+    try {
+      var db = FirebaseFirestore.instance;
+      final document =
+          await db.collection('users').doc(user.uid).set(user.toJson());
+      return user.uid;
+    } on FirebaseException catch (e) {
+      print("FirebaseCFException ${e.code}");
+      return e.code;
+    }
+  }
 }

@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user.dart';
 import '../repository/firebase_api.dart';
@@ -17,7 +14,6 @@ class RegisterPage extends StatefulWidget {
 enum Genre { male, female }
 
 class _RegisterPageState extends State<RegisterPage> {
-
   final FirebaseApi _firebaseApi = FirebaseApi();
 
   final _name = TextEditingController();
@@ -49,7 +45,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   DateTime _date = DateTime.now();
 
-  String _dateConverter(DateTime date){
+  String _dateConverter(DateTime date) {
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     final String dateFormatted = formatter.format(date);
     return dateFormatted;
@@ -60,7 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
       locale: const Locale("es"),
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(1924,1),
+      firstDate: DateTime(1924, 1),
       lastDate: DateTime.now(),
       helpText: "Fecha de nacimiento",
     );
@@ -72,39 +68,70 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-  void _showMsg(String msg){
+  void _showMsg(String msg) {
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
-        SnackBar(
-          content: Text(msg),
-          duration: Duration(days: 365),
-          action: SnackBarAction(
+      SnackBar(
+        content: Text(msg),
+        duration: Duration(days: 365),
+        action: SnackBarAction(
             label: "Aceptar", onPressed: scaffold.hideCurrentSnackBar),
-          ),
-        );
+      ),
+    );
   }
 
-  void _saveUser(User user) async{
+  void _createUser(User user, String password) async {
+    /*//Almacenamiento del usuario en preferencias compartidas
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("user", jsonEncode(user));
-    Navigator.pop(context);
+    prefs.setString("user", jsonEncode(user));*/
+    var result = await _firebaseApi.createUser(user.email, password);
+    if (result == 'invalid-email') {
+      _showMsg('El correo electrónico está mal escrito');
+    } else if (result == 'email-already-in-use') {
+      _showMsg('Ya existe una cuenta con ese correo electrónico');
+    } else if (result == 'weak-password') {
+      _showMsg('La contraseña debe tener mínimo 6 digitos');
+    } else if (result == 'network-request-failed') {
+      _showMsg('Revise su conexión a internet');
+    } else {
+      _showMsg('Usuario registrado con éxito');
+      user.uid = result;
+      _addUserInDB(user);
+    }
   }
-  void _onRegisterButtonClicked(){
+
+  void _addUserInDB(User user) async {
+    var result = await _firebaseApi.addUserInDB(user);
+    if (result == 'network-request-failed') {
+      _showMsg('Revise su conexión a internet');
+    } else {
+      Navigator.pop(context);
+    }
+  }
+
+  void _onRegisterButtonClicked() {
     String genre = "Masculino";
-    if (_email.text.isEmpty || _password.text.isEmpty){
+    if (_email.text.isEmpty || _password.text.isEmpty) {
       _showMsg("ERROR: Debe digitar el correo y la contraseña");
     } else {
       if (_password.text != _repPassword.text) {
         _showMsg("ERROR: Las contraseñas deben de ser iguales");
       } else {
-        if (_genre == Genre.female){
+        if (_genre == Genre.female) {
           genre = "Femenino";
         }
         var user = User(
-          _name.text, _email.text, _password.text, _city, genre,
-          _isActionFavorite, _isAdventureFavorite, _isFictionFavorite, _isSuspenseFavorite,
-          _date.toString());
-        _saveUser(user);
+            _name.text,
+            _email.text,
+            "",
+            _city,
+            genre,
+            _isActionFavorite,
+            _isAdventureFavorite,
+            _isFictionFavorite,
+            _isSuspenseFavorite,
+            _date);
+        _createUser(user, _password.text);
       }
     }
   }
@@ -139,24 +166,23 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 16,
                 ),
                 TextFormField(
-                  controller: _email,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Correo electrónico",
-                      prefixIcon: Icon(Icons.email),
-                      helperText: "*Campo obligatorio"),
-                  keyboardType: TextInputType.emailAddress,
-                  autovalidateMode: AutovalidateMode.always,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Debe digitar un correo";
-                    } else {
-                      if (!value!.isValidEmail() ){
-                        return "Correo inválido";
+                    controller: _email,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Correo electrónico",
+                        prefixIcon: Icon(Icons.email),
+                        helperText: "*Campo obligatorio"),
+                    keyboardType: TextInputType.emailAddress,
+                    autovalidateMode: AutovalidateMode.always,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Debe digitar un correo";
+                      } else {
+                        if (!value!.isValidEmail()) {
+                          return "Correo inválido";
+                        }
                       }
-                    }
-                  }
-                ),
+                    }),
                 const SizedBox(
                   height: 16,
                 ),
@@ -211,12 +237,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   enableFilter: true,
                   requestFocusOnTap: true,
                   label: const Text("Ciudad de residencia"),
-                  onSelected: (String? city){
+                  onSelected: (String? city) {
                     setState(() {
                       _city = city;
                     });
                   },
-                  dropdownMenuEntries: _cities.map<DropdownMenuEntry<String>>((String city){
+                  dropdownMenuEntries:
+                      _cities.map<DropdownMenuEntry<String>>((String city) {
                     return DropdownMenuEntry<String>(value: city, label: city);
                   }).toList(),
                 ),
@@ -316,11 +343,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   ],
                 ),
                 ElevatedButton(
-                  onPressed: (){
-                    _showSelectDate();
-                  },
-                  child: Text(buttonMsg)
-                ),
+                    onPressed: () {
+                      _showSelectDate();
+                    },
+                    child: Text(buttonMsg)),
                 ElevatedButton(
                     style: TextButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 14),
@@ -336,8 +362,6 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-
-
 }
 
 extension on String {
