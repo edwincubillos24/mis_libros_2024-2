@@ -4,14 +4,14 @@ class Book{
   var _author;
   var _pages;
   var _rating;
-  var _isActionFavorite;
-  var _isAdventureFavorite;
-  var _isDramaFavorite;
-  var _isFantasyFavorite;
-  var _isFictionFavorite;
-  var _isRomanceFavorite;
-  var _isSuspenseFavorite;
-  var _isTerrorFavorite;
+  var _isActionGenre;
+  var _isAdventureGenre;
+  var _isDramaGenre;
+  var _isFantasyGenre;
+  var _isFictionGenre;
+  var _isRomanceGenre;
+  var _isSuspenseGenre;
+  var _isTerrorGenre;
   var _urlPicture;
 
   Map<String, dynamic> toJson() => {
@@ -20,14 +20,14 @@ class Book{
     'author': _author,
     'pages': _pages,
     'rating': _rating,
-    'isActionFavorite': _isActionFavorite,
-    'isAdventureFavorite': _isAdventureFavorite,
-    'isFictionFavorite': _isFictionFavorite,
-    'isDramaFavorite': _isDramaFavorite,
-    'isFantasyFavorite': _isFantasyFavorite,
-    'isRomanceFavorite': _isRomanceFavorite,
-    'isSuspenseFavorite': _isSuspenseFavorite,
-    'isTerrorFavorite': _isTerrorFavorite,
+    'isActionGenre': _isActionGenre,
+    'isAdventureGenre': _isAdventureGenre,
+    'isFictionGenre': _isFictionGenre,
+    'isDramaGenre': _isDramaGenre,
+    'isFantasyGenre': _isFantasyGenre,
+    'isRomanceGenre': _isRomanceGenre,
+    'isSuspenseGenre': _isSuspenseGenre,
+    'isTerrorGenre': _isTerrorGenre,
     'urlPicture': _urlPicture,
   };
 
@@ -37,14 +37,14 @@ class Book{
         _author = json['author'],
         _pages = json['pages'],
         _rating = json['rating'],
-        _isActionFavorite = json['isActionFavorite'],
-        _isAdventureFavorite = json['isAdventureFavorite'],
-        _isFictionFavorite = json['isFictionFavorite'],
-        _isDramaFavorite = json['isDramaFavorite'],
-        _isFantasyFavorite = json['isFantasyFavorite'],
-        _isRomanceFavorite = json['isRomanceFavorite'],
-        _isSuspenseFavorite = json['isSuspenseFavorite'],
-        _isTerrorFavorite = json['isTerrorFavorite'],
+        _isActionGenre = json['isActionGenre'],
+        _isAdventureGenre = json['isAdventureGenre'],
+        _isFictionGenre = json['isFictionGenre'],
+        _isDramaGenre = json['isDramaGenre'],
+        _isFantasyGenre = json['isFantasyGenre'],
+        _isRomanceGenre = json['isRomanceGenre'],
+        _isSuspenseGenre = json['isSuspenseGenre'],
+        _isTerrorGenre = json['isTerrorGenre'],
         _urlPicture = json['urlPicture'];
 
   get id => _id;
@@ -59,14 +59,14 @@ class Book{
       this._author,
       this._pages,
       this._rating,
-      this._isActionFavorite,
-      this._isAdventureFavorite,
-      this._isDramaFavorite,
-      this._isFantasyFavorite,
-      this._isFictionFavorite,
-      this._isRomanceFavorite,
-      this._isSuspenseFavorite,
-      this._isTerrorFavorite,
+      this._isActionGenre,
+      this._isAdventureGenre,
+      this._isDramaGenre,
+      this._isFantasyGenre,
+      this._isFictionGenre,
+      this._isRomanceGenre,
+      this._isSuspenseGenre,
+      this._isTerrorGenre,
       this._urlPicture);
 
   get name => _name;
@@ -93,52 +93,52 @@ class Book{
     _rating = value;
   }
 
-  get isActionFavorite => _isActionFavorite;
+  get isActionGenre => _isActionGenre;
 
-  set isActionFavorite(value) {
-    _isActionFavorite = value;
+  set isActionGenre(value) {
+    _isActionGenre = value;
   }
 
-  get isAdventureFavorite => _isAdventureFavorite;
+  get isAdventureGenre => _isAdventureGenre;
 
-  set isAdventureFavorite(value) {
-    _isAdventureFavorite = value;
+  set isAdventureGenre(value) {
+    _isAdventureGenre = value;
   }
 
-  get isDramaFavorite => _isDramaFavorite;
+  get isDramaGenre => _isDramaGenre;
 
-  set isDramaFavorite(value) {
-    _isDramaFavorite = value;
+  set isDramaGenre(value) {
+    _isDramaGenre = value;
   }
 
-  get isFantasyFavorite => _isFantasyFavorite;
+  get isFantasyGenre => _isFantasyGenre;
 
-  set isFantasyFavorite(value) {
-    _isFantasyFavorite = value;
+  set isFantasyGenre(value) {
+    _isFantasyGenre = value;
   }
 
-  get isFictionFavorite => _isFictionFavorite;
+  get isFictionGenre => _isFictionGenre;
 
-  set isFictionFavorite(value) {
-    _isFictionFavorite = value;
+  set isFictionGenre(value) {
+    _isFictionGenre = value;
   }
 
-  get isRomanceFavorite => _isRomanceFavorite;
+  get isRomanceGenre => _isRomanceGenre;
 
-  set isRomanceFavorite(value) {
-    _isRomanceFavorite = value;
+  set isRomanceGenre(value) {
+    _isRomanceGenre = value;
   }
 
-  get isSuspenseFavorite => _isSuspenseFavorite;
+  get isSuspenseGenre => _isSuspenseGenre;
 
-  set isSuspenseFavorite(value) {
-    _isSuspenseFavorite = value;
+  set isSuspenseGenre(value) {
+    _isSuspenseGenre = value;
   }
 
-  get isTerrorFavorite => _isTerrorFavorite;
+  get isTerrorGenre => _isTerrorGenre;
 
-  set isTerrorFavorite(value) {
-    _isTerrorFavorite = value;
+  set isTerrorGenre(value) {
+    _isTerrorGenre = value;
   }
 
   get urlPicture => _urlPicture;
