@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import '../models/book.dart';
+import '../models/local_book.dart';
 import '../models/user.dart' as UserApp;
 
 class FirebaseApi {
@@ -53,7 +53,7 @@ class FirebaseApi {
     }
   }
 
-  Future<String> createBook(Book book, File? image) async {
+  Future<String> createBook(LocalBook book, File? image) async {
     try {
       final uid = FirebaseAuth.instance.currentUser?.uid;
       final document = await FirebaseFirestore.instance

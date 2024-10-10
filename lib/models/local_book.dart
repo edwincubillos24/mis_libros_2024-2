@@ -1,18 +1,18 @@
-class Book{
-  var _id;
-  var _name;
-  var _author;
-  var _pages;
-  var _rating;
-  var _isActionGenre;
-  var _isAdventureGenre;
-  var _isDramaGenre;
-  var _isFantasyGenre;
-  var _isFictionGenre;
-  var _isRomanceGenre;
-  var _isSuspenseGenre;
-  var _isTerrorGenre;
-  var _urlPicture;
+class LocalBook{
+  int _id;
+  String _name;
+  String _author;
+  int _pages;
+  double _rating;
+  bool _isActionGenre;
+  bool _isAdventureGenre;
+  bool _isDramaGenre;
+  bool _isFantasyGenre;
+  bool _isFictionGenre;
+  bool _isRomanceGenre;
+  bool _isSuspenseGenre;
+  bool _isTerrorGenre;
+  String _urlPicture;
 
   Map<String, dynamic> toJson() => {
     'id' : _id,
@@ -20,32 +20,32 @@ class Book{
     'author': _author,
     'pages': _pages,
     'rating': _rating,
-    'isActionGenre': _isActionGenre,
-    'isAdventureGenre': _isAdventureGenre,
-    'isFictionGenre': _isFictionGenre,
-    'isDramaGenre': _isDramaGenre,
-    'isFantasyGenre': _isFantasyGenre,
-    'isRomanceGenre': _isRomanceGenre,
-    'isSuspenseGenre': _isSuspenseGenre,
-    'isTerrorGenre': _isTerrorGenre,
-    'urlPicture': _urlPicture,
+    'is_action_genre': _isActionGenre,
+    'is_adventure_genre': _isAdventureGenre,
+    'is_fiction_genre': _isFictionGenre,
+    'is_drama_genre': _isDramaGenre,
+    'is_fantasy_genre': _isFantasyGenre,
+    'is_romance_genre': _isRomanceGenre,
+    'is_suspense_genre': _isSuspenseGenre,
+    'is_terror_genre': _isTerrorGenre,
+    'url_picture': _urlPicture,
   };
 
-  Book.fromJson(Map<String, dynamic> json)
+  LocalBook.fromJson(Map<String, dynamic> json)
       : _id = json['id'],
         _name = json['name'],
         _author = json['author'],
         _pages = json['pages'],
         _rating = json['rating'],
-        _isActionGenre = json['isActionGenre'],
-        _isAdventureGenre = json['isAdventureGenre'],
-        _isFictionGenre = json['isFictionGenre'],
-        _isDramaGenre = json['isDramaGenre'],
-        _isFantasyGenre = json['isFantasyGenre'],
-        _isRomanceGenre = json['isRomanceGenre'],
-        _isSuspenseGenre = json['isSuspenseGenre'],
-        _isTerrorGenre = json['isTerrorGenre'],
-        _urlPicture = json['urlPicture'];
+        _isActionGenre = json['is_action_genre'],
+        _isAdventureGenre = json['is_adventure_genre'],
+        _isFictionGenre = json['is_fiction_genre'],
+        _isDramaGenre = json['is_drama_genre'],
+        _isFantasyGenre = json['is_fantasy_genre'],
+        _isRomanceGenre = json['is_romance_genre'],
+        _isSuspenseGenre = json['is_suspense_genre'],
+        _isTerrorGenre = json['is_terror_genre'],
+        _urlPicture = json['url_picture'];
 
   get id => _id;
 
@@ -53,7 +53,7 @@ class Book{
     _id = value;
   }
 
-  Book(
+  LocalBook(
       this._id,
       this._name,
       this._author,
