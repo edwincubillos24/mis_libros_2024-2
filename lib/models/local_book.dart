@@ -1,4 +1,4 @@
-class Book{
+class LocalBook{
   var _id;
   var _name;
   var _author;
@@ -31,7 +31,7 @@ class Book{
     'urlPicture': _urlPicture,
   };
 
-  Book.fromJson(Map<String, dynamic> json)
+  LocalBook.fromJson(Map<String, dynamic> json)
       : _id = json['id'],
         _name = json['name'],
         _author = json['author'],
@@ -53,7 +53,7 @@ class Book{
     _id = value;
   }
 
-  Book(
+  LocalBook(
       this._id,
       this._name,
       this._author,

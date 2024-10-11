@@ -4,20 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mis_libros/repository/appmaster_api.dart';
 
-import '../models/local_book.dart';
-import '../repository/firebase_api.dart';
+import '../models/request_api_create_book.dart';
 
-class NewBookPage extends StatefulWidget {
-  const NewBookPage({super.key});
+class AppmasterNewBookPage extends StatefulWidget {
+  const AppmasterNewBookPage({super.key});
 
   @override
-  State<NewBookPage> createState() => _NewBookPageState();
+  State<AppmasterNewBookPage> createState() => _AppmasterNewBookPageState();
 }
 
-class _NewBookPageState extends State<NewBookPage> {
+class _AppmasterNewBookPageState extends State<AppmasterNewBookPage> {
 
-  final FirebaseApi _firebaseApi = FirebaseApi();
+  final AppmasterApi appmasterApi = AppmasterApi();
 
   final _name = TextEditingController();
   final _author = TextEditingController();
@@ -34,22 +34,31 @@ class _NewBookPageState extends State<NewBookPage> {
   bool _isSuspenseGenre = false, _isTerrorGenre = false;
 
   Future<void> _saveBook() async{
-    var book = LocalBook ("", _name.text, _author.text, _pages.text, _rating, _isActionGenre,
-      _isAdventureGenre,
-      _isDramaGenre,
-      _isFantasyGenre,
-      _isFictionGenre,
-      _isRomanceGenre,
-      _isSuspenseGenre,
-      _isTerrorGenre,
-      "");
 
-    var result = await _firebaseApi.createBook(book, image);
-    if (result == "network-request-failed") {
-      showMessage("Revise su conexión a internet");
-    } else {
-      //Creacion exitosa
+    var book = Book (
+        name: _name.text,
+        author: _author.text,
+        pages: int.parse(_pages.text),
+        rating: _rating,
+        id: 0,
+        isActionGenre: _isActionGenre,
+        isAdventureGenre: _isAdventureGenre,
+        isDramaGenre: _isDramaGenre,
+        isFantasyGenre: _isFantasyGenre,
+        isFictionGenre: _isFictionGenre,
+        isRomanceGenre: _isRomanceGenre,
+        isSuspenseGenre: _isSuspenseGenre,
+        isTerrorGenre: _isTerrorGenre,
+        urlPicture: "");
+
+    var requestApiCreateBook = RequestApiCreateBook(book: book);
+    var resultApi = await appmasterApi.createBook(requestApiCreateBook);
+
+    if (resultApi.success!) {
+      showMessage('Libro creado exitosamente');
       Navigator.pop(context);
+    } else {
+      showMessage('Error al crear el libro');
     }
   }
 
@@ -110,10 +119,10 @@ class _NewBookPageState extends State<NewBookPage> {
                     image != null
                         ? Image.file(image!, width: 150, height: 150)
                         : const Image(
-                            image: AssetImage('assets/images/logo.png'),
-                            width: 150,
-                            height: 150,
-                          ),
+                      image: AssetImage('assets/images/logo.png'),
+                      width: 150,
+                      height: 150,
+                    ),
                     Positioned(
                       bottom: 0,
                       right: 0,

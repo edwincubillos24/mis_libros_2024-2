@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mis_libros/pages/api_books_page.dart';
+import 'package:mis_libros/pages/appmaster_book_page.dart';
 import 'package:mis_libros/pages/book_stores_page.dart';
 import 'package:mis_libros/pages/my_books_page.dart';
 import 'package:mis_libros/pages/profile_page.dart';
@@ -17,6 +18,7 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
 
   static const List<Widget> _widgetOptions = [
     MyBooksPage(),
+    AppmasterBookPage(),
     ApiBooksPage(),
     BookStoresPage(),
     ProfilePage(),
@@ -42,6 +44,10 @@ class _NavigationBarPageState extends State<NavigationBarPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
             label: "Mis Libros",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.api),
+            label: "Appmaster",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.api),
