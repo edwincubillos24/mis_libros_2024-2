@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mis_libros/pages/appmaster_book_page.dart';
 import 'package:mis_libros/repository/appmaster_api.dart';
 
 import '../models/request_api_create_book.dart';
@@ -56,7 +57,8 @@ class _AppmasterNewBookPageState extends State<AppmasterNewBookPage> {
 
     if (resultApi.success!) {
       showMessage('Libro creado exitosamente');
-      Navigator.pop(context);
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const AppmasterBookPage()));
     } else {
       showMessage('Error al crear el libro');
     }

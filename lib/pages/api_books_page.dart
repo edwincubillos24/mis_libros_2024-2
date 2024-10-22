@@ -19,7 +19,6 @@ class _ApiBooksPageState extends State<ApiBooksPage> {
     setState(() {
       results.results?.lists?.forEach((list) {
         list.books?.forEach((book) {
-          print("name: ${book.title}, author: ${book.author}");
           listBooks.add(book);
         });
       });

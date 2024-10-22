@@ -2,8 +2,11 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'firebase_options.dart';
 
+import 'models/hive_local_book.dart';
 import 'pages/splash_page.dart';
 
 Future<void> main() async {
@@ -11,6 +14,9 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await Hive.initFlutter();
+  Hive.registerAdapter(HiveLocalBookAdapter());
+  await Hive.openBox<HiveLocalBook>('books');
   //FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   runApp(const MyApp());
 }

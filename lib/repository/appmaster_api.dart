@@ -20,10 +20,10 @@ class AppmasterApi {
     }
   }
 
-  Future<ResponseApiAppmasterCreateBook> createBook(RequestApiCreateBook book) async {
+  Future<ResponseApiAppmasterCreateBook> createBook(RequestApiCreateBook requestApiCreateBook) async {
     final apiResponse = await http.post(
         Uri.parse('https://wgreosi-app.apms.io/api/create_book/'),
-        body: jsonEncode(book.toJson()));
+        body: jsonEncode(requestApiCreateBook.toJson()));
 
     if (apiResponse.statusCode == 200) {
       return ResponseApiAppmasterCreateBook.fromJson(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mis_libros/models/hive_local_book.dart';
 
+import '../boxes.dart';
 import '../models/response_api_nytimes.dart';
 
 class DetailApiBookPage extends StatefulWidget {
@@ -16,6 +18,18 @@ class _DetailApiBookPageState extends State<DetailApiBookPage> {
 
   _DetailApiBookPageState(this.book);
 
+  void _saveBookInFavorites(){
+    var hiveLocalBook = HiveLocalBook()
+    ..title = book.title
+    ..bookImage = book.bookImage
+    ..author = book.author
+    ..publisher = book.publisher
+    ..description = book.description;
+
+    final box = Boxes.getHiveLocalBookBox();
+    box.add(hiveLocalBook);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +43,12 @@ class _DetailApiBookPageState extends State<DetailApiBookPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.network(book.bookImage ?? ""),
+              SizedBox(height: 8.0,),
+              IconButton(
+                alignment: Alignment.bottomLeft,
+                icon: const Icon(Icons.favorite),
+                onPressed: _saveBookInFavorites,
+              ),
               SizedBox(height: 8.0,),
               Text("Author: ${book.author}"),
               SizedBox(height: 8.0,),
