@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mis_libros/pages/profile_page.dart';
 
 import 'api_books_page.dart';
+import 'book_favorites_page.dart';
 import 'book_stores_page.dart';
 import 'my_books_page.dart';
 

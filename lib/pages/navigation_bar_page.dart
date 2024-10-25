@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mis_libros/pages/api_books_page.dart';
 import 'package:mis_libros/pages/appmaster_book_page.dart';
-import 'package:mis_libros/pages/book_stores_page.dart';
+import 'package:mis_libros/pages/book_favorites_page.dart';
 import 'package:mis_libros/pages/my_books_page.dart';
 import 'package:mis_libros/pages/profile_page.dart';
 import 'package:mis_libros/pages/tabs_page.dart';
+
+import 'book_stores_page.dart';
 
 class NavigationBarPage extends StatefulWidget {
   const NavigationBarPage({super.key});
